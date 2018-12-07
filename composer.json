@@ -1,0 +1,31 @@
+{
+	"name": "grifart/geocoding-client",
+	"description": "Client for geocoding API of mapy.cz.",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "GRIFART, spol. s r.o.",
+			"email": "grifart@grifart.cz"
+		}
+	],
+	"minimum-stability": "stable",
+	"require": {
+		"php": ">=5.6",
+		"ext-json": "*",
+		"ext-simplexml": "*"
+	},
+	"require-dev": {
+		"nette/tester": "^2.1",
+		"tracy/tracy": "^2.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"Grifart\\GeocodingClient\\": "src/"
+		},
+		"classmap": ["src/MapyCz/exceptions.php"]
+	},
+	"config": {
+		"sort-packages": true
+	}
+}
