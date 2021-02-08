@@ -14,6 +14,13 @@ final class CacheManager
 
 	public function __construct($cachePath)
 	{
+		// ensure cache path exists
+		if ( ! \is_dir($cachePath)) {
+			if ( ! @mkdir($cachePath, recursive: true)) {
+				throw new \RuntimeException('Can not create cache path.');
+			}
+		}
+
 		$this->cachePath = $cachePath;
 	}
 
