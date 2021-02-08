@@ -11,13 +11,13 @@
 	],
 	"minimum-stability": "stable",
 	"require": {
-		"php": ">=5.6",
+		"php": ">=8.0",
 		"ext-json": "*",
 		"ext-simplexml": "*"
 	},
 	"require-dev": {
-		"nette/tester": "^2.1",
-		"tracy/tracy": "^2.5"
+		"nette/tester": "^2.3",
+		"tracy/tracy": "^2.8"
 	},
 	"autoload": {
 		"psr-4": {
