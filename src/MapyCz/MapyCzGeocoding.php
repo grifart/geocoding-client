@@ -6,8 +6,8 @@ use Grifart\GeocodingClient\Geocoding;
 use Grifart\GeocodingClient\Location;
 use Grifart\GeocodingClient\MapyCz\Client\ApiClient;
 use Grifart\GeocodingClient\MapyCz\Client\Node;
-use Grifart\GeocodingClient\MapyCz\Mapping\Mapper;
 use RuntimeException;
+use function array_map;
 use function assert;
 use function in_array;
 use function reset;
@@ -20,7 +20,6 @@ final class MapyCzGeocoding implements Geocoding
 
 	public function __construct(
 		private ApiClient $apiClient,
-		private Mapper $mapper,
 	) {}
 
 
@@ -47,7 +46,14 @@ final class MapyCzGeocoding implements Geocoding
 			throw new NoResultException();
 		}
 
-		return $this->mapper->mapNodesToResults($pointNode->getChildren());
+		return array_map(
+			static fn(Node $node) => Location::from(
+				(float) $node->getAttribute('y'),
+				(float) $node->getAttribute('x'),
+				$node->getAttribute('title'),
+			),
+			$pointNode->getChildren(),
+		);
 	}
 
 	/**
