@@ -1,22 +1,22 @@
 <?php declare(strict_types = 1);
 
-use Grifart\GeocodingClient\Caching\CachedGeocodingService;
+use Grifart\GeocodingClient\Caching\CachedGeocoding;
 use Grifart\GeocodingClient\Caching\CacheManager;
-use Grifart\GeocodingClient\GeocodingService;
+use Grifart\GeocodingClient\Geocoding;
 use Grifart\GeocodingClient\MapyCz\Communicator;
 use Grifart\GeocodingClient\MapyCz\Mapping\Mapper;
-use Grifart\GeocodingClient\MapyCz\MapyCzGeocodingService;
+use Grifart\GeocodingClient\MapyCz\MapyCzGeocoding;
 use Tester\Assert;
 
 require_once __DIR__ . '/bootstrap.php';
 
 
 $testOn = function (
-	GeocodingService $client,
+	Geocoding $service,
 	float $expectedX,
 	float $expectedY,
 ): void {
-	$results = $client->geocodeAddress('Botanická 68a, Brno');
+	$results = $service->geocodeAddress('Botanická 68a, Brno');
 	$result = reset($results);
 
 	Assert::same($expectedX, $result->getLongitude());
@@ -26,16 +26,16 @@ $testOn = function (
 
 // mapy.cz
 $testOn(
-	new MapyCzGeocodingService(new Communicator(), new Mapper()),
+	new MapyCzGeocoding(new Communicator(), new Mapper()),
 	16.598916307925386,
 	49.20998332072665,
 );
 
 // cached mapy.cz
 $testOn(
-	$client = new CachedGeocodingService(
+	$client = new CachedGeocoding(
 		new CacheManager(__DIR__ . '/tmp/cache/deeper'),
-		new MapyCzGeocodingService(new Communicator(), new Mapper()),
+		new MapyCzGeocoding(new Communicator(), new Mapper()),
 	),
 	16.598916307925386,
 	49.20998332072665,

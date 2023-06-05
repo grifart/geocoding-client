@@ -2,16 +2,16 @@
 
 namespace Grifart\GeocodingClient\Caching;
 
-use Grifart\GeocodingClient\GeocodingService;
+use Grifart\GeocodingClient\Geocoding;
 use Grifart\GeocodingClient\Location;
 
 
-final class CachedGeocodingService implements GeocodingService
+final class CachedGeocoding implements Geocoding
 {
 
 	public function __construct(
 		private CacheManager $cacheManager,
-		private GeocodingService $geocodingService,
+		private Geocoding $inner,
 	) {}
 
 
@@ -27,7 +27,7 @@ final class CachedGeocodingService implements GeocodingService
 		}
 
 		// otherwise make fresh request and cache it
-		$locations = $this->geocodingService->geocodeAddress($address);
+		$locations = $this->inner->geocodeAddress($address);
 		$this->cacheManager->store($address, $locations);
 
 		return $locations;

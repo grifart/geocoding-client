@@ -2,7 +2,7 @@
 
 namespace Grifart\GeocodingClient\MapyCz;
 
-use Grifart\GeocodingClient\GeocodingService;
+use Grifart\GeocodingClient\Geocoding;
 use Grifart\GeocodingClient\Location;
 use Grifart\GeocodingClient\MapyCz\Mapping\Mapper;
 use Grifart\GeocodingClient\MapyCz\XML\Node;
@@ -12,7 +12,7 @@ use function in_array;
 use function reset;
 
 
-final class MapyCzGeocodingService implements GeocodingService
+final class MapyCzGeocoding implements Geocoding
 {
 
 	const ALLOWED_STATUS_CODES = [200, 206]; // mapy.cz returns 206 when there are "too many results"
