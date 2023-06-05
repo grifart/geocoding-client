@@ -2,7 +2,7 @@
 
 namespace Grifart\GeocodingClient\MapyCz\Mapping;
 
-use Grifart\GeocodingClient\MapyCz\XML\Node;
+use Grifart\GeocodingClient\MapyCz\Client\Node;
 use function array_map;
 
 

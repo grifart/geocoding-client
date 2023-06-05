@@ -4,8 +4,9 @@ namespace Grifart\GeocodingClient\MapyCz;
 
 use Grifart\GeocodingClient\Geocoding;
 use Grifart\GeocodingClient\Location;
+use Grifart\GeocodingClient\MapyCz\Client\ApiClient;
+use Grifart\GeocodingClient\MapyCz\Client\Node;
 use Grifart\GeocodingClient\MapyCz\Mapping\Mapper;
-use Grifart\GeocodingClient\MapyCz\XML\Node;
 use RuntimeException;
 use function assert;
 use function in_array;
@@ -18,7 +19,7 @@ final class MapyCzGeocoding implements Geocoding
 	const ALLOWED_STATUS_CODES = [200, 206]; // mapy.cz returns 206 when there are "too many results"
 
 	public function __construct(
-		private Communicator $communicator,
+		private ApiClient $apiClient,
 		private Mapper $mapper,
 	) {}
 
@@ -31,8 +32,7 @@ final class MapyCzGeocoding implements Geocoding
 	 */
 	public function geocode(string $address): array
 	{
-		$result = $this->communicator->makeRequest($address);
-
+		$result = $this->apiClient->geocode($address);
 		if ( ! $result->hasAnyChildren()) {
 			throw new NoResultException();
 		}

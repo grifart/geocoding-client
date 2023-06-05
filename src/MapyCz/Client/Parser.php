@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Grifart\GeocodingClient\MapyCz\XML;
+namespace Grifart\GeocodingClient\MapyCz\Client;
 
 use SimpleXMLElement;
 use SimpleXMLIterator;

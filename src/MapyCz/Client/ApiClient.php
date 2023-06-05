@@ -1,9 +1,7 @@
 <?php declare(strict_types = 1);
 
-namespace Grifart\GeocodingClient\MapyCz;
+namespace Grifart\GeocodingClient\MapyCz\Client;
 
-use Grifart\GeocodingClient\MapyCz\XML\Node;
-use Grifart\GeocodingClient\MapyCz\XML\Parser;
 use RuntimeException;
 use SimpleXMLIterator;
 use function file_get_contents;
@@ -11,18 +9,19 @@ use function rawurlencode;
 use function sprintf;
 
 
-final class Communicator
+final class ApiClient
 {
 
-	const MAPYCZ_GEOCODING_API_URL = 'https://api.mapy.cz/geocode?query=%s';
+	const API_URL = 'https://api.mapy.cz';
 
 
 	/**
 	 * @throws RuntimeException
 	 */
-	public function makeRequest(string $address): Node
+	public function geocode(string $address): Node
 	{
-		$url = sprintf(self::MAPYCZ_GEOCODING_API_URL, rawurlencode($address));
+		$url = self::API_URL .
+			sprintf('/geocode?query=%s', rawurlencode($address));
 		$data = @file_get_contents($url);
 
 		if ( ! $data) {
