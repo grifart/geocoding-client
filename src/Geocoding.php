@@ -10,6 +10,6 @@ interface Geocoding
 	 * Finds a geographical location for given address
 	 * @return Location[]
 	 */
-	public function geocodeAddress(string $address): array;
+	public function geocode(string $address): array;
 
 }

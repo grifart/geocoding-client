@@ -29,7 +29,7 @@ final class MapyCzGeocoding implements Geocoding
 	 * @throws NoResultException
 	 * @throws RuntimeException
 	 */
-	public function geocodeAddress(string $address): array
+	public function geocode(string $address): array
 	{
 		$result = $this->communicator->makeRequest($address);
 

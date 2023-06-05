@@ -18,7 +18,7 @@ final class CachedGeocoding implements Geocoding
 	/**
 	 * @return Location[]
 	 */
-	public function geocodeAddress(string $address): array
+	public function geocode(string $address): array
 	{
 		// obtain results from cache if any
 		$cachedLocations = $this->cacheManager->get($address);
@@ -27,7 +27,7 @@ final class CachedGeocoding implements Geocoding
 		}
 
 		// otherwise make fresh request and cache it
-		$locations = $this->inner->geocodeAddress($address);
+		$locations = $this->inner->geocode($address);
 		$this->cacheManager->store($address, $locations);
 
 		return $locations;
