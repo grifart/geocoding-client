@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 use Grifart\GeocodingClient\Caching\CachedGeocodingService;
 use Grifart\GeocodingClient\Caching\CacheManager;
