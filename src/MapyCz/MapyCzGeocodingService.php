@@ -6,38 +6,30 @@ use Grifart\GeocodingClient\GeocodingService;
 use Grifart\GeocodingClient\Location;
 use Grifart\GeocodingClient\MapyCz\Mapping\Mapper;
 use Grifart\GeocodingClient\MapyCz\XML\Node;
+use RuntimeException;
+use function assert;
+use function in_array;
+use function reset;
 
 
 final class MapyCzGeocodingService implements GeocodingService
 {
 
-	const ALLOWED_STATUS_CODES = [200, 206]; // mapy.cz returns 206 when there are "too many results", dunno why
-
-
-	/** @var Communicator */
-	private $communicator;
-
-	/** @var Mapper */
-	private $mapper;
-
+	const ALLOWED_STATUS_CODES = [200, 206]; // mapy.cz returns 206 when there are "too many results"
 
 	public function __construct(
-		Communicator $communicator,
-		Mapper $mapper
-	) {
-		$this->communicator = $communicator;
-		$this->mapper = $mapper;
-	}
+		private Communicator $communicator,
+		private Mapper $mapper,
+	) {}
 
 
 	/**
-	 * @param string $address
 	 * @return Location[]
 	 * @throws InvalidStatusException
 	 * @throws NoResultException
-	 * @throws \RuntimeException
+	 * @throws RuntimeException
 	 */
-	public function geocodeAddress($address)
+	public function geocodeAddress(string $address): array
 	{
 		$result = $this->communicator->makeRequest($address);
 
@@ -46,10 +38,10 @@ final class MapyCzGeocodingService implements GeocodingService
 		}
 
 		$resultNodeChildren = $result->getChildren();
-		$pointNode = \reset($resultNodeChildren);
-		\assert($pointNode instanceof Node);
+		$pointNode = reset($resultNodeChildren);
+		assert($pointNode instanceof Node);
 
-		$this->verifyStatusCode($pointNode);
+		self::verifyStatusCode($pointNode);
 
 		if ( ! $pointNode->hasAnyChildren()) {
 			throw new NoResultException();
@@ -59,13 +51,12 @@ final class MapyCzGeocodingService implements GeocodingService
 	}
 
 	/**
-	 * @param Node $pointNode
 	 * @throws InvalidStatusException
-	 * @throws \RuntimeException
+	 * @throws RuntimeException
 	 */
-	private function verifyStatusCode(Node $pointNode)
+	private static function verifyStatusCode(Node $pointNode): void
 	{
-		if ( ! \in_array($pointNode->getAttribute('status'), self::ALLOWED_STATUS_CODES)) {
+		if ( ! in_array($pointNode->getAttribute('status'), self::ALLOWED_STATUS_CODES)) {
 			throw new InvalidStatusException();
 		}
 	}

@@ -4,7 +4,11 @@ namespace Grifart\GeocodingClient\MapyCz;
 
 use Grifart\GeocodingClient\MapyCz\XML\Node;
 use Grifart\GeocodingClient\MapyCz\XML\Parser;
-use Grifart\GeocodingClient\MapyCz\XML\Utils;
+use RuntimeException;
+use SimpleXMLIterator;
+use function file_get_contents;
+use function rawurlencode;
+use function sprintf;
 
 
 final class Communicator
@@ -14,20 +18,18 @@ final class Communicator
 
 
 	/**
-	 * @param $address
-	 * @return Node
-	 * @throws \RuntimeException
+	 * @throws RuntimeException
 	 */
-	public function makeRequest($address)
+	public function makeRequest(string $address): Node
 	{
-		$url = \sprintf(self::MAPYCZ_GEOCODING_API_URL, \rawurlencode($address));
-		$data = @\file_get_contents($url);
+		$url = sprintf(self::MAPYCZ_GEOCODING_API_URL, rawurlencode($address));
+		$data = @file_get_contents($url);
 
 		if ( ! $data) {
-			throw new \RuntimeException('There was a problem with requesting given URL (' . $url . ').');
+			throw new RuntimeException('There was a problem with requesting given URL (' . $url . ').');
 		}
 
-		return Parser::parse(Utils::convertXmlStringToIterator($data));
+		return Parser::parse(new SimpleXMLIterator($data));
 	}
 
 }

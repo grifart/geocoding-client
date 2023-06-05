@@ -9,38 +9,28 @@ use Grifart\GeocodingClient\Location;
 final class CachedGeocodingService implements GeocodingService
 {
 
-	/** @var CacheManager */
-	private $cacheManager;
-
-	/** @var GeocodingService */
-	private $geocodingService;
-
-
-	public function __construct(CacheManager $cacheManager, GeocodingService $geocodingService)
-	{
-		$this->cacheManager = $cacheManager;
-		$this->geocodingService = $geocodingService;
-	}
+	public function __construct(
+		private CacheManager $cacheManager,
+		private GeocodingService $geocodingService,
+	) {}
 
 
 	/**
-	 * @param string $address
 	 * @return Location[]
 	 */
-	public function geocodeAddress($address)
+	public function geocodeAddress(string $address): array
 	{
-		// if possible, get results from cache
+		// obtain results from cache if any
 		$cachedLocations = $this->cacheManager->get($address);
-		if ($cachedLocations !== NULL) {
+		if ($cachedLocations !== null) {
 			return $cachedLocations;
 		}
 
-		// otherwise make a request to API...
+		// otherwise make fresh request and cache it
 		$locations = $this->geocodingService->geocodeAddress($address);
-		$this->cacheManager->store($address, $locations); // ...and cache it
+		$this->cacheManager->store($address, $locations);
+
 		return $locations;
 	}
-
-
 
 }

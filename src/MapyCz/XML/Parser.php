@@ -2,14 +2,14 @@
 
 namespace Grifart\GeocodingClient\MapyCz\XML;
 
+use SimpleXMLElement;
+use SimpleXMLIterator;
+
 
 final class Parser
 {
 
-	/**
-	 * @return Node
-	 */
-	public static function parse(\SimpleXMLIterator $iterator)
+	public static function parse(SimpleXMLIterator $iterator): Node
 	{
 		$rootNode = new Node($iterator->getName());
 		self::parseAttributes($iterator->attributes(), $rootNode);
@@ -19,7 +19,7 @@ final class Parser
 		return $rootNode;
 	}
 
-	private static function parseChildren(\SimpleXMLIterator $iterator, Node $node)
+	private static function parseChildren(SimpleXMLIterator $iterator, Node $node): void
 	{
 		for ($iterator->rewind(); $iterator->valid(); $iterator->next()) {
 			$child = new Node($iterator->key());
@@ -28,8 +28,8 @@ final class Parser
 
 			if ($iterator->hasChildren()){
 				self::parseChildren($iterator->current(), $child);
-			}
-			else {
+
+			} else {
 				$child->setValue((string) $iterator->current());
 			}
 
@@ -37,7 +37,7 @@ final class Parser
 		}
 	}
 
-	private static function parseAttributes(\SimpleXMLElement $element, Node $node)
+	private static function parseAttributes(SimpleXMLElement $element, Node $node): void
 	{
 		foreach ($element as $name => $value) {
 			$node->addAttribute($name, (string) $value);

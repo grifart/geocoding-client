@@ -2,12 +2,14 @@
 
 namespace Grifart\GeocodingClient\MapyCz;
 
+use RuntimeException;
 
-final class NoResponseException extends \RuntimeException
+
+final class NoResponseException extends RuntimeException
 {}
 
-final class InvalidStatusException extends \RuntimeException
+final class InvalidStatusException extends RuntimeException
 {}
 
-final class NoResultException extends \RuntimeException
+final class NoResultException extends RuntimeException
 {}

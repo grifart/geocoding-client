@@ -6,47 +6,28 @@ namespace Grifart\GeocodingClient\MapyCz\XML;
 final class Node
 {
 
-	/** @var mixed */
-	private $name;
+	public function __construct(
+		private mixed $name,
+		private mixed $value = null,
+	) {}
 
-	/** @var mixed */
-	private $value;
-
-	/** @var array */
-	private $attributes = [];
-
+	private array $attributes = [];
 	/** @var Node[] */
-	private $children = [];
+	private array $children = [];
 
 
-	public function __construct($name, $value = NULL)
-	{
-		$this->name = $name;
-		$this->value = $value;
-	}
-
-
-	/**
-	 * @return mixed
-	 */
-	public function getName()
+	public function getName(): mixed
 	{
 		return $this->name;
 	}
 
 
-	/**
-	 * @return mixed
-	 */
-	public function getValue()
+	public function getValue(): mixed
 	{
 		return $this->value;
 	}
 
-	/**
-	 * @param mixed $value
-	 */
-	public function setValue($value)
+	public function setValue(mixed $value): void
 	{
 		$this->value = $value;
 	}

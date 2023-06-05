@@ -3,21 +3,28 @@
 namespace Grifart\GeocodingClient\Caching;
 
 use Grifart\GeocodingClient\Location;
+use RuntimeException;
+use function file_exists;
+use function file_get_contents;
+use function file_put_contents;
+use function is_dir;
+use function md5;
+use function mkdir;
+use function serialize;
+use function unserialize;
 
 
 final class CacheManager
 {
 
-	/** @var string */
-	private $cachePath;
+	private string $cachePath;
 
-
-	public function __construct($cachePath)
+	public function __construct(string $cachePath)
 	{
 		// ensure cache path exists
-		if ( ! \is_dir($cachePath)) {
+		if ( ! is_dir($cachePath)) {
 			if ( ! @mkdir($cachePath, recursive: true)) {
-				throw new \RuntimeException('Can not create cache path.');
+				throw new RuntimeException('Can not create cache path.');
 			}
 		}
 
@@ -26,48 +33,40 @@ final class CacheManager
 
 
 	/**
-	 * @param string $address
-	 * @return Location[]|NULL
+	 * @return Location[]|null
 	 */
-	public function get($address)
+	public function get(string $address): ?array
 	{
-		$fileName = $this->resolveFileName($address);
+		$fileName = self::resolveFileName($address);
 		$cachedFilePath = $this->cachePath . '/' . $fileName;
 
-		if (!\file_exists($cachedFilePath)) {
-			return NULL;
+		if ( ! file_exists($cachedFilePath)) {
+			return null;
 		}
 
-		$content = \file_get_contents($cachedFilePath);
+		$content = file_get_contents($cachedFilePath);
 		if ( ! $content) {
-			throw new \RuntimeException('Unable to open cached file.'); // @todo: use logger and return null instead
+			throw new RuntimeException('Unable to open cached file.'); // @todo: use logger and return null instead
 		}
 
-		return \unserialize($content);
+		return unserialize($content);
 	}
 
-	/**
-	 * @param string $address
-	 * @param mixed $results
-	 */
-	public function store($address, $results)
+
+	public function store(string $address, mixed $results): void
 	{
-		if ( ! \file_put_contents(
-			$this->cachePath . '/' . $this->resolveFileName($address),
-			\serialize($results)
+		if ( ! file_put_contents(
+			$this->cachePath . '/' . self::resolveFileName($address),
+			serialize($results),
 		)) {
-			throw new \RuntimeException('Could not cache results.'); // @todo: use logger and continue instead
+			throw new RuntimeException('Could not cache results.'); // @todo: use logger and continue instead
 		}
 	}
 
 
-	/**
-	 * @param string $address
-	 * @return string
-	 */
-	private function resolveFileName($address)
+	private static function resolveFileName(string $address): string
 	{
-		return \md5($address);
+		return md5($address);
 	}
 
 }

@@ -17,7 +17,7 @@ $testOn = function (
 	float $expectedY,
 ): void {
 	$results = $client->geocodeAddress('Botanická 68a, Brno');
-	$result = \reset($results);
+	$result = reset($results);
 
 	Assert::same($expectedX, $result->getLongitude());
 	Assert::same($expectedY, $result->getLatitude());

@@ -3,6 +3,7 @@
 namespace Grifart\GeocodingClient\MapyCz\Mapping;
 
 use Grifart\GeocodingClient\MapyCz\XML\Node;
+use function array_map;
 
 
 final class Mapper
@@ -10,18 +11,18 @@ final class Mapper
 
 	/**
 	 * @param Node[] $nodes
-	 *
 	 * @return ResultItem[]
 	 */
-	public function mapNodesToResults(array $nodes)
+	public function mapNodesToResults(array $nodes): array
 	{
-		return \array_map(function (Node $node) {
-			return ResultItem::from(
+		return array_map(
+			static fn(Node $node) => ResultItem::from(
 				(float) $node->getAttribute('y'),
 				(float) $node->getAttribute('x'),
-				$node->getAttribute('title')
-			);
-		}, $nodes);
+				$node->getAttribute('title'),
+			),
+			$nodes,
+		);
 	}
 
 }

@@ -2,18 +2,14 @@
 
 namespace Grifart\GeocodingClient;
 
+use Serializable;
 
-interface Location extends \Serializable
+
+interface Location extends Serializable
 {
 
-	/**
-	 * @return float
-	 */
-	public function getLatitude();
+	public function getLatitude(): float;
 
-	/**
-	 * @return float
-	 */
-	public function getLongitude();
+	public function getLongitude(): float;
 
 }
