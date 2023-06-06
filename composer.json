@@ -27,7 +27,10 @@
 		"psr-4": {
 			"Grifart\\GeocodingClient\\": "src/"
 		},
-		"classmap": ["src/MapyCz/exceptions.php"]
+		"classmap": [
+			"src/exceptions.php",
+			"src/Providers/MapyCz/exceptions.php"
+		]
 	},
 	"config": {
 		"sort-packages": true

@@ -2,10 +2,9 @@
 
 namespace Grifart\GeocodingClient\Providers\MapyCz;
 
+use Grifart\GeocodingClient\GeocodingFailed;
 use Grifart\GeocodingClient\GeocodingProvider;
 use Grifart\GeocodingClient\Location;
-use Grifart\GeocodingClient\MapyCz\GeocodingFailed;
-use Grifart\GeocodingClient\MapyCz\GivenAttributeNotFound;
 use SimpleXMLIterator;
 use function array_map;
 use function assert;
@@ -61,7 +60,7 @@ final class MapyCzProvider implements GeocodingProvider
 		// check response is valid
 
 		if ( ! $resultNode->hasAnyChildren()) {
-			throw GeocodingFailed::invalidResponse('Result node should contain point child node');
+			throw new GeocodingFailed('Result node should contain point child node');
 		}
 
 		$children = $resultNode->getChildren();
@@ -71,15 +70,15 @@ final class MapyCzProvider implements GeocodingProvider
 		try {
 			$statusCode = (int) $pointNode->getAttribute('status');
 			if ( ! in_array($statusCode, self::ALLOWED_STATUS_CODES, strict: true)) {
-				throw GeocodingFailed::badStatusCode($statusCode);
+				throw new GeocodingFailed(sprintf("Server responded with status code '%d'", $statusCode));
 			}
 
 		} catch (GivenAttributeNotFound $e) {
-			throw GeocodingFailed::invalidResponse('Status attribute is missing', previous: $e);
+			throw new GeocodingFailed('Status attribute is missing', previous: $e);
 		}
 
 		if ( ! $pointNode->hasAnyChildren()) {
-			throw GeocodingFailed::invalidResponse('Point node should contain item children nodes');
+			throw new GeocodingFailed('Point node should contain item children nodes');
 		}
 
 
@@ -95,7 +94,7 @@ final class MapyCzProvider implements GeocodingProvider
 			);
 
 		} catch (GivenAttributeNotFound $e) {
-			throw GeocodingFailed::invalidResponse('One of result item attribute is missing, check attached underlying exception', previous: $e);
+			throw new GeocodingFailed('One of result item attribute is missing, check attached underlying exception', previous: $e);
 		}
 	}
 
