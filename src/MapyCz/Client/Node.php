@@ -2,6 +2,10 @@
 
 namespace Grifart\GeocodingClient\MapyCz\Client;
 
+use RuntimeException;
+use function array_key_exists;
+use function count;
+
 
 final class Node
 {
@@ -11,6 +15,7 @@ final class Node
 		private mixed $value = null,
 	) {}
 
+	/** @var array<string, string> */
 	private array $attributes = [];
 	/** @var Node[] */
 	private array $children = [];
@@ -34,32 +39,26 @@ final class Node
 
 
 	/**
-	 * @param string $name
-	 * @return mixed
-	 * @throws \RuntimeException
+	 * @throws RuntimeException
 	 */
-	public function getAttribute($name)
+	public function getAttribute(string $name): string
 	{
-		if ( ! \array_key_exists($name, $this->attributes)) {
-			throw new \RuntimeException('Attribute ' . $name . ' does not exist.');
+		if ( ! array_key_exists($name, $this->attributes)) {
+			throw new RuntimeException('Attribute ' . $name . ' does not exist.');
 		}
 
 		return $this->attributes[$name];
 	}
 
 	/**
-	 * @return array
+	 * @return array<string, string>
 	 */
-	public function getAttributes()
+	public function getAttributes(): array
 	{
 		return $this->attributes;
 	}
 
-	/**
-	 * @param mixed $name
-	 * @param mixed $value
-	 */
-	public function addAttribute($name, $value)
+	public function addAttribute(string $name, string $value): void
 	{
 		$this->attributes[$name] = $value;
 	}
@@ -68,19 +67,19 @@ final class Node
 	/**
 	 * @return Node[]
 	 */
-	public function getChildren()
+	public function getChildren(): array
 	{
 		return $this->children;
 	}
 
-	public function addChild(Node $node)
+	public function addChild(Node $node): void
 	{
 		$this->children[] = $node;
 	}
 
-	public function hasAnyChildren()
+	public function hasAnyChildren(): bool
 	{
-		return \count($this->children) > 0;
+		return count($this->children) > 0;
 	}
 
 }
