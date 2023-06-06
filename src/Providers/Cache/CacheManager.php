@@ -11,6 +11,7 @@ use function is_dir;
 use function md5;
 use function mkdir;
 use function serialize;
+use function str_replace;
 use function unserialize;
 
 
@@ -48,6 +49,9 @@ final class CacheManager
 		if ( ! $content) {
 			throw new RuntimeException('Unable to open cached file.'); // @todo: use logger and return null instead
 		}
+
+		// namespace backwards compatibility
+		$content = str_replace('C:49:"Grifart\GeocodingClient\MapyCz\Mapping\ResultItem', 'C:32:"Grifart\GeocodingClient\Location', $content);
 
 		/** @var Location[] $locations */
 		$locations = unserialize($content);
