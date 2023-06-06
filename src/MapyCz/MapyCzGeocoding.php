@@ -24,43 +24,78 @@ final class MapyCzGeocoding implements Geocoding
 
 	/**
 	 * @return Location[]
-	 * @throws InvalidStatusException
-	 * @throws NoResultException
-	 * @throws RuntimeException
+	 * @throws ConnectionToMapyCzApiFailed
+	 * @throws GeocodingFailed
 	 */
 	public function geocode(string $address): array
 	{
+		// obtain data from API
 		$url = sprintf('%s/geocode?query=%s', self::API_URL, rawurlencode($address));
 		$data = @file_get_contents($url);
 		if ( ! $data) {
-			throw new RuntimeException('There was a problem with requesting given URL (' . $url . ').');
+			throw new ConnectionToMapyCzApiFailed();
 		}
 
-		$result = Parser::parse(new SimpleXMLIterator($data));
-		if ( ! $result->hasAnyChildren()) {
-			throw new NoResultException();
+		/**
+		 * parse response
+		 *
+		 * expected structure:
+		 * <result>
+		 * 		<point
+		 * 			query = queried address
+		 * 			status = status code
+		 * 		>
+		 * 			<item
+		 * 				x y = coords
+		 * 				id = mapy cz identifier
+		 * 				source type = ref to type of result item
+		 * 				title = name of the point
+					/>
+		 * 		</point>
+		 * </result>
+		 */
+		$resultNode = Parser::parse(new SimpleXMLIterator($data));
+
+
+		// check response is valid
+
+		if ( ! $resultNode->hasAnyChildren()) {
+			throw GeocodingFailed::invalidResponse('Result node should contain point child node');
 		}
 
-		$resultNodeChildren = $result->getChildren();
-		$pointNode = reset($resultNodeChildren);
+		$children = $resultNode->getChildren();
+		$pointNode = reset($children);
 		assert($pointNode instanceof Node);
 
-		if ( ! in_array($pointNode->getAttribute('status'), self::ALLOWED_STATUS_CODES)) {
-			throw new InvalidStatusException();
+		try {
+			$statusCode = (int) $pointNode->getAttribute('status');
+			if ( ! in_array($statusCode, self::ALLOWED_STATUS_CODES, strict: true)) {
+				throw GeocodingFailed::badStatusCode($statusCode);
+			}
+
+		} catch (GivenAttributeNotFound $e) {
+			throw GeocodingFailed::invalidResponse('Status attribute is missing', previous: $e);
 		}
 
 		if ( ! $pointNode->hasAnyChildren()) {
-			throw new NoResultException();
+			throw GeocodingFailed::invalidResponse('Point node should contain item children nodes');
 		}
 
-		return array_map(
-			static fn(Node $node) => Location::from(
-				(float) $node->getAttribute('y'),
-				(float) $node->getAttribute('x'),
-				$node->getAttribute('title'),
-			),
-			$pointNode->getChildren(),
-		);
+
+		// map
+		try {
+			return array_map(
+				static fn(Node $node) => Location::from(
+					(float) $node->getAttribute('y'),
+					(float) $node->getAttribute('x'),
+					$node->getAttribute('title'),
+				),
+				$pointNode->getChildren(),
+			);
+
+		} catch (GivenAttributeNotFound $e) {
+			throw GeocodingFailed::invalidResponse('One of result item attribute is missing, check attached underlying exception', previous: $e);
+		}
 	}
 
 }

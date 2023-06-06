@@ -2,7 +2,6 @@
 
 namespace Grifart\GeocodingClient\MapyCz;
 
-use RuntimeException;
 use function array_key_exists;
 use function count;
 
@@ -39,12 +38,12 @@ final class Node
 
 
 	/**
-	 * @throws RuntimeException
+	 * @throws GivenAttributeNotFound
 	 */
 	public function getAttribute(string $name): string
 	{
 		if ( ! array_key_exists($name, $this->attributes)) {
-			throw new RuntimeException('Attribute ' . $name . ' does not exist.');
+			throw new GivenAttributeNotFound();
 		}
 
 		return $this->attributes[$name];
