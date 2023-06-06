@@ -4,6 +4,7 @@ namespace Grifart\GeocodingClient\MapyCz\Client;
 
 use SimpleXMLElement;
 use SimpleXMLIterator;
+use function assert;
 
 
 final class Parser
@@ -12,7 +13,9 @@ final class Parser
 	public static function parse(SimpleXMLIterator $iterator): Node
 	{
 		$rootNode = new Node($iterator->getName());
-		self::parseAttributes($iterator->attributes(), $rootNode);
+		$attributes = $iterator->attributes();
+		assert($attributes !== null);
+		self::parseAttributes($attributes, $rootNode);
 
 		self::parseChildren($iterator, $rootNode);
 
@@ -24,7 +27,9 @@ final class Parser
 		for ($iterator->rewind(); $iterator->valid(); $iterator->next()) {
 			$child = new Node($iterator->key());
 
-			self::parseAttributes($iterator->current()->attributes(), $child);
+			$attributes = $iterator->current()->attributes();
+			assert($attributes !== null);
+			self::parseAttributes($attributes, $child);
 
 			if ($iterator->hasChildren()){
 				self::parseChildren($iterator->current(), $child);

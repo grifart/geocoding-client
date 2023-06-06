@@ -49,7 +49,9 @@ final class CacheManager
 			throw new RuntimeException('Unable to open cached file.'); // @todo: use logger and return null instead
 		}
 
-		return unserialize($content);
+		/** @var Location[] $locations */
+		$locations = unserialize($content);
+		return $locations;
 	}
 
 

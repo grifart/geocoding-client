@@ -3,6 +3,8 @@
 namespace Grifart\GeocodingClient;
 
 use Serializable;
+use stdClass;
+use function assert;
 use function json_decode;
 use function json_encode;
 
@@ -45,14 +47,17 @@ final class Location implements Serializable
 
 	public function serialize()
 	{
-		return json_encode([
+		$data = json_encode([
 			'latitude' => $this->latitude,
 			'longitude' => $this->longitude,
 		]);
+		assert($data !== false);
+		return $data;
 	}
 
 	public function unserialize($serialized)
 	{
+		/** @var stdClass{latitude: float, longitude: float} $data */
 		$data = json_decode($serialized);
 		$this->latitude = $data->latitude;
 		$this->longitude = $data->longitude;
