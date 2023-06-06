@@ -5,8 +5,8 @@ namespace Grifart\GeocodingClient\MapyCz;
 use Grifart\GeocodingClient\Geocoding;
 use Grifart\GeocodingClient\Location;
 use Grifart\GeocodingClient\MapyCz\Client\ApiClient;
-use Grifart\GeocodingClient\MapyCz\Client\Node;
 use RuntimeException;
+use SimpleXMLIterator;
 use function array_map;
 use function assert;
 use function in_array;
@@ -31,7 +31,8 @@ final class MapyCzGeocoding implements Geocoding
 	 */
 	public function geocode(string $address): array
 	{
-		$result = $this->apiClient->geocode($address);
+		$data = $this->apiClient->geocode($address);
+		$result = Parser::parse(new SimpleXMLIterator($data));
 		if ( ! $result->hasAnyChildren()) {
 			throw new NoResultException();
 		}

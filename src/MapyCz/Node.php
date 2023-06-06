@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Grifart\GeocodingClient\MapyCz\Client;
+namespace Grifart\GeocodingClient\MapyCz;
 
 use RuntimeException;
 use function array_key_exists;
