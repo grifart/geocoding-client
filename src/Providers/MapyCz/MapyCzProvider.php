@@ -5,6 +5,8 @@ namespace Grifart\GeocodingClient\Providers\MapyCz;
 use Grifart\GeocodingClient\GeocodingFailed;
 use Grifart\GeocodingClient\GeocodingProvider;
 use Grifart\GeocodingClient\Location;
+use Grifart\GeocodingClient\Providers\MapyCz\Result\Node;
+use Grifart\GeocodingClient\Providers\MapyCz\Result\Parser;
 use SimpleXMLIterator;
 use function array_map;
 use function assert;

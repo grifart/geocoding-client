@@ -1,7 +1,8 @@
 <?php declare(strict_types = 1);
 
-namespace Grifart\GeocodingClient\Providers\MapyCz;
+namespace Grifart\GeocodingClient\Providers\MapyCz\Result;
 
+use Grifart\GeocodingClient\Providers\MapyCz\GivenAttributeNotFound;
 use function array_key_exists;
 use function count;
 
