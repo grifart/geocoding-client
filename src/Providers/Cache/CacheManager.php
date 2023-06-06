@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Grifart\GeocodingClient\Providers\Caching;
+namespace Grifart\GeocodingClient\Providers\Cache;
 
 use Grifart\GeocodingClient\Location;
 use RuntimeException;

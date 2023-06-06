@@ -1,8 +1,8 @@
 <?php declare(strict_types = 1);
 
 use Grifart\GeocodingClient\GeocodingProvider;
-use Grifart\GeocodingClient\Providers\Caching\CacheManager;
-use Grifart\GeocodingClient\Providers\Caching\CacheProvider;
+use Grifart\GeocodingClient\Providers\Cache\CacheManager;
+use Grifart\GeocodingClient\Providers\Cache\CacheProvider;
 use Grifart\GeocodingClient\Providers\MapyCz\MapyCzProvider;
 use Tester\Assert;
 
