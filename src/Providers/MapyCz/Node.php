@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Grifart\GeocodingClient\MapyCz;
+namespace Grifart\GeocodingClient\Providers\MapyCz;
 
 use function array_key_exists;
 use function count;

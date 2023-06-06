@@ -1,10 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Grifart\GeocodingClient\MapyCz;
+namespace Grifart\GeocodingClient\Providers\MapyCz;
 
 use Grifart\GeocodingClient\GeocodingProvider;
 use Grifart\GeocodingClient\Location;
-use RuntimeException;
+use Grifart\GeocodingClient\MapyCz\GeocodingFailed;
+use Grifart\GeocodingClient\MapyCz\GivenAttributeNotFound;
 use SimpleXMLIterator;
 use function array_map;
 use function assert;

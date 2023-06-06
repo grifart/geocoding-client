@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Grifart\GeocodingClient\Caching;
+namespace Grifart\GeocodingClient\Providers\Caching;
 
 use Grifart\GeocodingClient\GeocodingProvider;
 use Grifart\GeocodingClient\Location;
