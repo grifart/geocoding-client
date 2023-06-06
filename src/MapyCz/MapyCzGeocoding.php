@@ -4,23 +4,22 @@ namespace Grifart\GeocodingClient\MapyCz;
 
 use Grifart\GeocodingClient\Geocoding;
 use Grifart\GeocodingClient\Location;
-use Grifart\GeocodingClient\MapyCz\Client\ApiClient;
 use RuntimeException;
 use SimpleXMLIterator;
 use function array_map;
 use function assert;
+use function file_get_contents;
 use function in_array;
+use function rawurlencode;
 use function reset;
+use function sprintf;
 
 
 final class MapyCzGeocoding implements Geocoding
 {
 
-	const ALLOWED_STATUS_CODES = [200, 206]; // mapy.cz returns 206 when there are "too many results"
-
-	public function __construct(
-		private ApiClient $apiClient,
-	) {}
+	private const API_URL = 'https://api.mapy.cz';
+	private const ALLOWED_STATUS_CODES = [200, 206]; // mapy.cz returns 206 when there are "too many results"
 
 
 	/**
@@ -31,7 +30,12 @@ final class MapyCzGeocoding implements Geocoding
 	 */
 	public function geocode(string $address): array
 	{
-		$data = $this->apiClient->geocode($address);
+		$url = sprintf('%s/geocode?query=%s', self::API_URL, rawurlencode($address));
+		$data = @file_get_contents($url);
+		if ( ! $data) {
+			throw new RuntimeException('There was a problem with requesting given URL (' . $url . ').');
+		}
+
 		$result = Parser::parse(new SimpleXMLIterator($data));
 		if ( ! $result->hasAnyChildren()) {
 			throw new NoResultException();
@@ -41,7 +45,9 @@ final class MapyCzGeocoding implements Geocoding
 		$pointNode = reset($resultNodeChildren);
 		assert($pointNode instanceof Node);
 
-		self::verifyStatusCode($pointNode);
+		if ( ! in_array($pointNode->getAttribute('status'), self::ALLOWED_STATUS_CODES)) {
+			throw new InvalidStatusException();
+		}
 
 		if ( ! $pointNode->hasAnyChildren()) {
 			throw new NoResultException();
@@ -55,17 +61,6 @@ final class MapyCzGeocoding implements Geocoding
 			),
 			$pointNode->getChildren(),
 		);
-	}
-
-	/**
-	 * @throws InvalidStatusException
-	 * @throws RuntimeException
-	 */
-	private static function verifyStatusCode(Node $pointNode): void
-	{
-		if ( ! in_array($pointNode->getAttribute('status'), self::ALLOWED_STATUS_CODES)) {
-			throw new InvalidStatusException();
-		}
 	}
 
 }
