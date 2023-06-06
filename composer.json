@@ -9,6 +9,9 @@
 			"email": "grifart@grifart.cz"
 		}
 	],
+	"scripts": {
+		"phpstan": "phpstan analyze --level=max src"
+	},
 	"minimum-stability": "stable",
 	"require": {
 		"php": ">=8.0",
@@ -17,6 +20,7 @@
 	},
 	"require-dev": {
 		"nette/tester": "^2.3",
+		"phpstan/phpstan": "^1.10",
 		"tracy/tracy": "^2.8"
 	},
 	"autoload": {
