@@ -3,7 +3,7 @@
 namespace Grifart\GeocodingClient;
 
 
-interface Geocoding
+interface GeocodingProvider
 {
 
 	/**

@@ -2,16 +2,16 @@
 
 namespace Grifart\GeocodingClient\Caching;
 
-use Grifart\GeocodingClient\Geocoding;
+use Grifart\GeocodingClient\GeocodingProvider;
 use Grifart\GeocodingClient\Location;
 
 
-final class CachedGeocoding implements Geocoding
+final class CacheProvider implements GeocodingProvider
 {
 
 	public function __construct(
 		private CacheManager $cacheManager,
-		private Geocoding $inner,
+		private GeocodingProvider $inner,
 	) {}
 
 

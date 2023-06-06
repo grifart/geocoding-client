@@ -2,7 +2,7 @@
 
 namespace Grifart\GeocodingClient\MapyCz;
 
-use Grifart\GeocodingClient\Geocoding;
+use Grifart\GeocodingClient\GeocodingProvider;
 use Grifart\GeocodingClient\Location;
 use RuntimeException;
 use SimpleXMLIterator;
@@ -15,7 +15,7 @@ use function reset;
 use function sprintf;
 
 
-final class MapyCzGeocoding implements Geocoding
+final class MapyCzProvider implements GeocodingProvider
 {
 
 	private const API_URL = 'https://api.mapy.cz';

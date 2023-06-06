@@ -1,10 +1,9 @@
 <?php declare(strict_types = 1);
 
-use Grifart\GeocodingClient\Caching\CachedGeocoding;
+use Grifart\GeocodingClient\Caching\CacheProvider;
 use Grifart\GeocodingClient\Caching\CacheManager;
-use Grifart\GeocodingClient\Geocoding;
-use Grifart\GeocodingClient\MapyCz\Client\ApiClient;
-use Grifart\GeocodingClient\MapyCz\MapyCzGeocoding;
+use Grifart\GeocodingClient\GeocodingProvider;
+use Grifart\GeocodingClient\MapyCz\MapyCzProvider;
 use Tester\Assert;
 
 
@@ -12,7 +11,7 @@ require_once __DIR__ . '/bootstrap.php';
 
 
 $testOn = function (
-	Geocoding $service,
+	GeocodingProvider $service,
 	float $expectedX,
 	float $expectedY,
 ): void {
@@ -26,16 +25,16 @@ $testOn = function (
 
 // mapy.cz
 $testOn(
-	new MapyCzGeocoding(new ApiClient()),
+	new MapyCzProvider(),
 	16.598916307925386,
 	49.20998332072665,
 );
 
 // cached mapy.cz
 $testOn(
-	$client = new CachedGeocoding(
+	$client = new CacheProvider(
 		new CacheManager(__DIR__ . '/tmp/cache/deeper'),
-		new MapyCzGeocoding(new ApiClient()),
+		new MapyCzProvider(),
 	),
 	16.598916307925386,
 	49.20998332072665,
