@@ -11,11 +11,11 @@ require_once __DIR__ . '/bootstrap.php';
 
 
 $testOn = function (
-	GeocodingProvider $service,
+	GeocodingProvider $provider,
 	float $expectedX,
 	float $expectedY,
 ): void {
-	$results = $service->geocode('Botanická 68a, Brno');
+	$results = $provider->geocode('Botanická 68a, Brno');
 	$result = reset($results);
 
 	Assert::same($expectedX, $result->getLongitude());
